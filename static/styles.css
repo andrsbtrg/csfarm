@@ -1,0 +1,10 @@
+.error-message {
+	margin: 0;
+    color:red;
+}
+.error input {
+      box-shadow: 0 0 3px #CC0000;
+}
+.valid input {
+      box-shadow: 0 0 3px #36cc00;
+ }

@@ -1,7 +1,9 @@
 import sqlite3
 
+__db_url = "farm.db"
 
-def connection(arg: str) -> sqlite3.Cursor:
-    con = sqlite3.connect(arg)
-    cur = con.cursor()
-    return cur
+
+def connection() -> sqlite3.Connection:
+    con = sqlite3.connect(__db_url)
+    con.row_factory = sqlite3.Row
+    return con
