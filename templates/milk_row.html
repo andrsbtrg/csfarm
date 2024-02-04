@@ -1,0 +1,17 @@
+<tr>
+	<th scope="row">{{ cow.id }}</th>
+	<td scope="row">
+		<div class="image-wrapper"><img
+				src="https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fi.pinimg.com%2Foriginals%2F89%2F26%2F73%2F8926739e794e001de75d37adc1ae2510.jpg&f=1&nofb=1&ipt=863fb3f34a688559c92d0db7ac0f4dc6bdcef7999679364cbc3fb4e5eb7fa074&ipo=images" />
+		</div>
+	</td>
+	<td>{{ cow.name }}</td>
+	<td>
+		<div>
+			<input type="hidden" value="{{ datetime }}" name="datetime" />
+			<input type="hidden" value="{{ ampm }}" name="ampm" />
+			<input class="form-control w-auto" name="milk-{{cow.id}}" />
+		</div>
+
+	</td>
+</tr>

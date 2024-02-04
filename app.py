@@ -187,6 +187,27 @@ def animals():
 
 
 @requires_login
+@app.route("/milk", methods=["GET", "POST"])
+def milk():
+    if request.method == "GET":
+        return render_template("milk.html")
+    # handle post
+    db = connection()
+    user_id = session["user_id"]
+
+    dt = request.form.get("date")
+    ampm = request.form.get("ampm")
+
+    print(dt)
+    row = db.execute(
+        "SELECT a_id, name, birthday, img FROM animals "
+        "WHERE user_id = (?)",
+        (user_id,)).fetchone()
+    cow = Cow(row)
+    return render_template("milk_row.html", cow=cow, datetime=dt, ampm=ampm)
+
+
+@requires_login
 @app.route("/analytics", methods=["GET"])
 def analytics():
     animal = request.args.get("id", None)

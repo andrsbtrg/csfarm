@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+
+{% block title %}
+Milk
+{% endblock %}
+
+{% block main %}
+<h1>Milk</h1>
+
+<form hx-post="/milk" hx-target="#milk-line" hx-swap="beforeend">
+	<div class="form-group row g-3 mb-3 mt-1">
+		<div class="col">
+			<div class="row mb-3">
+				<label for="date" class="col-sm-2 col-form-label">Date</label>
+				<input required class="form-control mx-auto w-auto" name="date" type="date" />
+			</div>
+		</div>
+		<div class="col">
+			<select name="ampm" class="form-select">
+				<option value="am">Morning</option>
+				<option value="pm">Afternoon</option>
+			</select>
+		</div>
+		<div class="col">
+			<input class="form-control mx-auto w-auto" name="name" type="text" autocomplete="name"
+				placeholder="Cow name or 'id'" />
+			<datalist id="cows">
+			</datalist>
+		</div>
+		<div class="col">
+			<button class="btn btn-primary" type="submit">Add to milk line</button>
+		</div>
+	</div>
+</form>
+
+<form>
+	<table class="table">
+		<thead>
+			<tr>
+				<th scope="col">#</th>
+				<th scope="col" style="width: 100px;">Img</th>
+				<th scope="col">Name</th>
+				<th scope="col">Production (L)</th>
+			</tr>
+		</thead>
+		<tbody id="milk-line" class="align-middle">
+		</tbody>
+	</table>
+</form>
+{% endblock %}
