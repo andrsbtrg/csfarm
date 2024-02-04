@@ -8,3 +8,19 @@
 .valid input {
       box-shadow: 0 0 3px #36cc00;
  }
+
+.image-wrapper {
+  width: 100px;
+  height: 100px;
+  overflow: hidden;
+  position: relative;
+  margin: 10px 0;
+  border-radius: 50%;
+}
+.image-wrapper img {
+  width: 100%;
+  position: absolute;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+}

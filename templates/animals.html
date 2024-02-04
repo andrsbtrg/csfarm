@@ -1,0 +1,57 @@
+{% extends "base.html" %}
+
+{% block title %}
+Animals
+{% endblock %}
+
+{% block main %}
+
+<form hx-post="/animals" hx-target="main" hx-swap="beforebegin">
+	<div class="form-group row g-3 mb-3 mt-1">
+		<div class="col">
+			<input autocomplete="off" required autofocus class="form-control mx-auto w-50" name="tag" placeholder="Tag"
+				type="number">
+		</div>
+		<div class="col">
+			<input class="form-control mx-auto w-auto" required name="name" placeholder="Name" type="text"
+				autocomplete="off" />
+		</div>
+		<div class="col">
+			<div class="row mb-3">
+				<label for="birthday" class="col-sm-2 col-form-label">Birthday</label>
+				<input class="form-control mx-auto w-auto" name="birthday" type="date" />
+			</div>
+		</div>
+		<div class="col">
+			<button class="btn btn-primary" type="submit">Add new cow</button>
+		</div>
+	</div>
+</form>
+
+<table class="table">
+	<thead>
+		<tr>
+			<th scope="col">#</th>
+			<th scope="col" style="width: 100px;">Img</th>
+			<th scope="col">First</th>
+			<th scope="col">Born on</th>
+			<th scope="col">See more</th>
+		</tr>
+	</thead>
+	<tbody class="align-middle">
+		{% for cow in cows %}
+		<tr>
+			<th scope="row">{{ cow.id }}</th>
+			<td scope="row">
+				<div class="image-wrapper"><img
+						src="https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fi.pinimg.com%2Foriginals%2F89%2F26%2F73%2F8926739e794e001de75d37adc1ae2510.jpg&f=1&nofb=1&ipt=863fb3f34a688559c92d0db7ac0f4dc6bdcef7999679364cbc3fb4e5eb7fa074&ipo=images" />
+				</div>
+			</td>
+			<td>{{ cow.name }}</td>
+			<td>{{ cow.age }}</td>
+			<td><a href="/analytics/{{cow.id}}">See more</td>
+		</tr>
+		{% endfor %}
+	</tbody>
+</table>
+{% endblock %}
