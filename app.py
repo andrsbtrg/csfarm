@@ -1,8 +1,8 @@
-from flask import Flask, render_template, session, redirect, request
+from flask import Flask, render_template, session, redirect, request, jsonify
 from flask_session import Session
 from database import connection
 from werkzeug.security import check_password_hash, generate_password_hash
-from helpers import alert, hx_redirect, search_places
+from helpers import alert, hx_redirect, search_places, requires_login
 from datetime import datetime
 from models import Farm, Cow
 from uuid import uuid4
@@ -100,6 +100,7 @@ def logout():
     return redirect("/login")
 
 
+@requires_login
 @app.route("/farm", methods=["GET", "POST"])
 def farm():
     db = connection()
@@ -132,6 +133,7 @@ def farm():
     return hx_redirect("/farm")
 
 
+@requires_login
 @app.route("/farm/locate", methods=["POST"])
 def find_locations():
     country = request.form.get("country")
@@ -143,6 +145,7 @@ def find_locations():
     return render_template("location_input.html", locations=locations)
 
 
+@requires_login
 @app.route("/animals", methods=["GET", "POST"])
 def animals():
     if request.method == "GET":
@@ -181,3 +184,28 @@ def animals():
         data)
     db.commit()
     return hx_redirect("/animals")
+
+
+@requires_login
+@app.route("/analytics", methods=["GET"])
+def analytics():
+    animal = request.args.get("id", None)
+    return render_template("analytics.html", animal=animal)
+
+
+@requires_login
+@app.route("/get_barchart_data")
+def get_barchart_data():
+    """
+    JSON
+    """
+    id = request.args.get("id", None)
+    print(id)
+    data = [
+        {"x": 0, "y": 0},
+        {"x": 1, "y": 1},
+        {"x": 2, "y": 4},
+        {"x": 3, "y": 8},
+        {"x": 4, "y": 16},
+    ]
+    return jsonify(data)

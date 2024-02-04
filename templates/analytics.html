@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+
+{% block title %}
+Analytics
+{% endblock %}
+
+{% block main %}
+<div class="visualization">
+	<div id="barChartWrapper">
+		<svg id="barChart"></svg>
+	</div>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/d3@7"></script>
+<script>
+	const barChartDataUrl = "{{ url_for('get_barchart_data', id=animal) }}";
+</script>
+<script src="{{ url_for('static', filename='js/barChart.js') }}"></script>
+<script src="{{ url_for('static', filename='js/index.js') }}"></script>
+{% endblock %}
