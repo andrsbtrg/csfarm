@@ -1,5 +1,6 @@
 from flask import session, redirect, render_template, make_response
 from functools import wraps
+from OSMPythonTools.nominatim import Nominatim
 
 
 def hx_redirect(path: str):
@@ -20,3 +21,12 @@ def requires_login(f):
 
 def alert(message: str):
     return render_template("flash_message.html", message=message)
+
+
+def search_places(country: str, place: str) -> []:
+    nominatim = Nominatim()
+    result = nominatim.query(f"{place}, {country}")
+    json = result.toJSON()
+    if len(json) == 0:
+        return []
+    return json

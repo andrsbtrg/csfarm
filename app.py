@@ -2,7 +2,9 @@ from flask import Flask, render_template, session, redirect, request
 from flask_session import Session
 from database import connection
 from werkzeug.security import check_password_hash, generate_password_hash
-from helpers import alert, hx_redirect
+from helpers import alert, hx_redirect, search_places
+from datetime import datetime
+from models import Farm
 
 app = Flask(__name__)
 # Configure session to use filesystem (instead of signed cookies)
@@ -95,3 +97,45 @@ def logout():
 
     # Redirect user to login form
     return redirect("/login")
+
+
+@app.route("/farm", methods=["GET", "POST"])
+def farm():
+    db = connection()
+    user_id = session["user_id"]
+    if request.method == "GET":
+        row = db.execute(
+            "SELECT * from farms where user_id = (?)", (user_id,)).fetchone()
+        if len(row) == 0:
+            countries = []
+            with open("countries.txt") as file:
+                for line in file.readlines():
+                    countries.append(line.strip())
+            return render_template("farm_new.html", countries=countries)
+        farm = Farm(row)
+        return render_template("farm.html", farm=farm)
+
+    # handle post
+    name = request.form.get("farm-name")
+    if len(name) == 0:
+        return alert("Farm name cannot be empty")
+    country = request.form.get("country")
+    location = request.form.get("location")
+    created_at = datetime.now()
+    values = (user_id, name, country, location, created_at)
+    db.execute(
+        "INSERT INTO farms (user_id, name, country, location, created_at) VALUES (?, ?, ?, ?, ?);",
+        values)
+    db.commit()
+    return hx_redirect("/farm")
+
+
+@app.route("/farm/locate", methods=["POST"])
+def find_locations():
+    country = request.form.get("country")
+    location = request.form.get("location")
+    locations = []
+    if country != "" and len(location) > 3:
+        locations = search_places(country, location)
+    print(locations)
+    return render_template("location_input.html", locations=locations)

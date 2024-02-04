@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+
+{% block title %}
+Farms
+{% endblock %}
+
+{% block main %}
+<h1>Your farms:</h1>
+
+<div>
+	<h3>{{ farm.name }}</h3>
+	<h3>{{ farm.country }}</h3>
+	<h3>{{ farm.location }}</h3>
+</div>
+{% endblock %}

@@ -1,0 +1,5 @@
+<datalist id="locations">
+	{% for loc in locations %}
+	<option value="{{ loc['name'] }}">{{ loc["display_name"] }}</option>
+	{% endfor %}
+</datalist>

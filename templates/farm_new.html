@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+
+{% block title %}
+New farm
+{% endblock %}
+
+{% block main %}
+<h1>Add a new Farm</h1>
+<form hx-post="/farm" hx-target="main" hx-swap="beforebegin">
+	<div class="mb-3">
+		<input autocomplete="off" required autofocus class="form-control mx-auto w-auto" name="farm-name"
+			placeholder="Farm name" type="text">
+	</div>
+	<div class="mb-3">
+		<input class="form-control mx-auto w-auto" list="countries" name="country" placeholder="Country" type="text" />
+		<datalist id="countries">
+			{% for country in countries %}
+			<option value="{{ country }}"></option>
+			{% endfor %}
+		</datalist>
+	</div>
+	<div class="mb-3">
+		<input hx-post="farm/locate" hx-target="#locations" hx-trigger="change, keyup delay:200ms changed"
+			class="form-control mx-auto w-auto" list="locations" name="location" placeholder="Location" type="text" />
+		<datalist id="locations">
+		</datalist>
+	</div>
+
+	<button class="btn btn-primary" type="submit">Save</button>
+</form>
+
+{% endblock %}
