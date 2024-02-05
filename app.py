@@ -152,7 +152,7 @@ def animals():
         db = connection()
         user_id = session["user_id"]
         rows = db.execute(
-            "SELECT a_id, name, birthday, img FROM animals "
+            "SELECT uuid, a_id, name, birthday, img FROM animals "
             "WHERE user_id = (?)",
             (user_id,)).fetchall()
         cows = []
@@ -200,14 +200,50 @@ def milk():
     name = request.form.get("name")
     if name == "":
         return alert("Cow name shoudn't be empty")
-
-    print(dt)
     row = db.execute(
-        "SELECT a_id, name, birthday, img FROM animals "
+        "SELECT uuid, a_id, name, birthday, img FROM animals "
         "WHERE user_id = (?) AND name = (?)",
         (user_id, name)).fetchone()
     cow = Cow(row)
     return render_template("milk_row.html", cow=cow, datetime=dt, ampm=ampm)
+
+
+@app.route("/milk/record", methods=["POST"])
+def record_milk():
+    known_keys = ["datetime", "day-period"]
+    datetime = request.form.get(known_keys[0])
+    day_period = request.form.get(known_keys[1])
+    user_id = session["user_id"]
+
+    prods = {}
+    for key in request.form:
+        if key not in known_keys:
+            animal_id = key.split('.')[1]
+            prods[animal_id] = request.form[key]
+
+    data = []
+    for key in prods:
+        record = []
+        record.append(user_id)
+        record.append(key)
+        a_production = float(prods[key])
+        record.append(a_production)
+        record.append(day_period)
+        record.append(datetime)
+
+        data.append(tuple(record))
+
+    print(data)
+    db = connection()
+    for x in data:
+
+        db.execute(
+            "INSERT INTO production ("
+            "user_id, a_uuid, prod, day_period, date, created_at, modified_at)"
+            "VALUES (?, ?, ?, ?, ?, datetime('now'), datetime('now') )",
+            x)
+    db.commit()
+    return render_template("milk_table.html")
 
 
 @requires_login

@@ -9,8 +9,8 @@
 	<td scope="row">
 		<div>
 			<input type="hidden" value="{{ datetime }}" name="datetime" />
-			<input type="hidden" value="{{ ampm }}" name="ampm" />
-			<input class="form-control" name="milk-{{cow.id}}" type="number" placeholder="(ex 1.0 L)" />
+			<input type="hidden" value="{{ ampm }}" name="day-period" />
+			<input class="form-control" name="prod.{{ cow.uuid }}" type="number" placeholder="(ex 1.0 L)" />
 		</div>
 	</td>
 </tr>

@@ -14,13 +14,13 @@ class Farm:
 
 
 class Cow:
+    uuid: str
     id: int
     name: str
-    age: float
-    data: float
+    birthday: str
 
     def __init__(self, row):
-        self.id = row[0]
-        self.name = row[1]
-        self.age = row[2]
-        self.data = 3.14
+        self.uuid = row[0]
+        self.id = row[1]
+        self.name = row[2]
+        self.birthday = row[3]

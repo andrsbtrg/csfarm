@@ -20,7 +20,10 @@ def requires_login(f):
 
 
 def alert(message: str):
-    return render_template("flash_message.html", message=message)
+    resp = make_response(render_template(
+        "flash_message.html", message=message))
+    resp.headers['HX-Retarget'] = "#alerts"
+    return resp
 
 
 def search_places(country: str, place: str) -> []:
