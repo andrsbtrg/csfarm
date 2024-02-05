@@ -197,12 +197,15 @@ def milk():
 
     dt = request.form.get("date")
     ampm = request.form.get("ampm")
+    name = request.form.get("name")
+    if name == "":
+        return alert("Cow name shoudn't be empty")
 
     print(dt)
     row = db.execute(
         "SELECT a_id, name, birthday, img FROM animals "
-        "WHERE user_id = (?)",
-        (user_id,)).fetchone()
+        "WHERE user_id = (?) AND name = (?)",
+        (user_id, name)).fetchone()
     cow = Cow(row)
     return render_template("milk_row.html", cow=cow, datetime=dt, ampm=ampm)
 
