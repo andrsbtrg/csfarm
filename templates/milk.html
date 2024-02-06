@@ -22,8 +22,13 @@ Milk
 			</select>
 		</div>
 		<div class="col">
-			<input class="form-control mx-auto w-auto" name="name" type="text" autocomplete="name"
-				placeholder="Cow name or 'id'" />
+			<input class="form-control mx-auto w-auto" name="name" type="text" autocomplete="off" list="cows"
+				placeholder="Cow name or 'id'"
+				hx-get="/animals/names"
+				hx-swap="outerHTML"
+				hx-trigger="keyup once"
+				hx-target="#cows"
+				/>
 			<datalist id="cows">
 			</datalist>
 		</div>

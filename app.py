@@ -274,3 +274,30 @@ def get_barchart_data():
             prod = Production.get_from(db, a_uuid)
     prod.sort(key=lambda x: x["date"])
     return jsonify(prod)
+
+
+@requires_login
+@app.route("/animals/search")
+def search_animals():
+    query = request.args.get("name")
+    if query == "":
+        return render_template("datalist.html", id="cows", elems=[])
+    user_id = session["user_id"]
+
+    db = connection()
+    rows = db.execute(
+        "SELECT name FROM animals WHERE name LIKE (?) AND user_id = (?)", (
+            f"{query}%", user_id,)).fetchall()
+    names = [row[0] for row in rows]
+    return render_template("datalist.html", id="cows", elems=names)
+
+
+@requires_login
+@app.route("/animals/names")
+def list_animals():
+    db = connection()
+    user_id = session["user_id"]
+    rows = db.execute(
+        "SELECT a_id, name FROM animals WHERE user_id = (?)", (user_id,)).fetchall()
+    names = [{"name": f"{row[0]} - {row[1]}", "value": row[1]} for row in rows]
+    return render_template("datalist.html", id="cows", elems=names)
