@@ -4,7 +4,7 @@ from database import connection
 from werkzeug.security import check_password_hash, generate_password_hash
 from helpers import alert, hx_redirect, search_places, requires_login
 from datetime import datetime
-from models import Farm, Cow
+from models import Farm, Cow, Production
 from uuid import uuid4
 
 app = Flask(__name__)
@@ -233,7 +233,6 @@ def record_milk():
 
         data.append(tuple(record))
 
-    print(data)
     db = connection()
     for x in data:
 
@@ -260,12 +259,18 @@ def get_barchart_data():
     JSON
     """
     id = request.args.get("id", None)
-    print(id)
-    data = [
-        {"x": 0, "y": 0},
-        {"x": 1, "y": 1},
-        {"x": 2, "y": 4},
-        {"x": 3, "y": 8},
-        {"x": 4, "y": 16},
-    ]
-    return jsonify(data)
+    user_id = session["user_id"]
+    db = connection()
+    if id is None:
+        prod = Production.get_all(db, user_id)
+    else:
+        row = db.execute(
+            "SELECT uuid FROM animals WHERE a_id=(?) AND user_id=(?);",
+            (id, user_id,)).fetchone()
+        if row is None:
+            prod = []
+        else:
+            a_uuid = row[0]
+            prod = Production.get_from(db, a_uuid)
+    prod.sort(key=lambda x: x["date"])
+    return jsonify(prod)

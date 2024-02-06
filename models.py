@@ -1,3 +1,6 @@
+from sqlite3 import Connection
+
+
 class Farm:
     id: int
     user_id: int
@@ -24,3 +27,35 @@ class Cow:
         self.id = row[1]
         self.name = row[2]
         self.birthday = row[3]
+
+
+class Production:
+
+    @staticmethod
+    def _prod_from_row(rows):
+        prod = []
+        for r in rows:
+            entry = {'date': r[2]}
+            total_prod = float(r[0])
+            entry['prod'] = total_prod
+            entry['day_period'] = r[1]
+            prod.append(entry)
+
+        return prod
+
+    @staticmethod
+    def get_from(db: Connection, animal_uuid: str):
+        rows = db.execute(
+            "SELECT prod, day_period, date FROM production "
+            "WHERE a_uuid = (?);",
+            (animal_uuid,)).fetchall()
+        return Production._prod_from_row(rows)
+
+    @staticmethod
+    def get_all(db: Connection, user_id: str):
+        rows = db.execute(
+            "SELECT prod, day_period, date FROM production "
+            "WHERE user_id=(?);",
+            (user_id,)).fetchall()
+
+        return Production._prod_from_row(rows)

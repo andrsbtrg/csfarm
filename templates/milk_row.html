@@ -10,7 +10,7 @@
 		<div>
 			<input type="hidden" value="{{ datetime }}" name="datetime" />
 			<input type="hidden" value="{{ ampm }}" name="day-period" />
-			<input class="form-control" name="prod.{{ cow.uuid }}" type="number" placeholder="(ex 1.0 L)" />
+			<input class="form-control" name="prod.{{ cow.uuid }}" type="number" step="0.01" placeholder="(ex 1.0 L)" />
 		</div>
 	</td>
 </tr>

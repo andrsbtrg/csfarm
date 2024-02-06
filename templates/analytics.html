@@ -5,6 +5,19 @@ Analytics
 {% endblock %}
 
 {% block main %}
+
+<form class="row g-3" action="/analytics" method="get">
+	<div class="col-auto">
+		<label class="align-vertical">Type cow id to filter</label>
+	</div>
+	<div class="col-auto">
+		<input class="form-control" name="id" type="number" />
+	</div>
+	<div class="col-auto">
+		<button type="submit" class="btn btn-primary mb-3">Filter</button>
+	</div>
+</form>
+
 <div class="visualization">
 	<div id="barChartWrapper">
 		<svg id="barChart"></svg>
