@@ -24,3 +24,10 @@
   top: 50%;
   transform: translateY(-50%);
 }
+.bar {
+  fill: #212529;
+}
+
+.bar-2 {
+  fill: #0d6efd;
+}

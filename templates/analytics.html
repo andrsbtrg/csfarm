@@ -8,24 +8,42 @@ Analytics
 
 <form class="row g-3" action="/analytics" method="get">
 	<div class="col-auto">
-		<label class="align-vertical">Type cow id to filter</label>
+		<label class="align-vertical">Cow id or name:</label>
 	</div>
 	<div class="col-auto">
-		<input class="form-control" name="id" type="number" />
+		<input class="form-control" name="id" type="text" list="cowids" 
+		hx-get="/animals/ids"
+		hx-swap="outerHTML"
+		hx-trigger="keyup once"
+		hx-target="#cowids"
+		/>
+		<datalist id="cowids">
+		</datalist>
 	</div>
 	<div class="col-auto">
 		<button type="submit" class="btn btn-primary mb-3">Filter</button>
 	</div>
 </form>
 
-<div class="visualization">
-	<div id="barChartWrapper">
-		<svg id="barChart"></svg>
+<div class="container">
+	<div class="row">
+		<div class="col" id="barChartWrapper">
+			<label>Production per day</label>
+			<svg id="barChart"></svg>
+		</div>
+		<div class="col" id="rankingChartWrapper">
+			<label>Average production per animal</label>
+			<svg id="rankingChart"></svg>
+		</div>
 	</div>
 </div>
 <script src="https://cdn.jsdelivr.net/npm/d3@7"></script>
 <script>
 	const barChartDataUrl = "{{ url_for('get_barchart_data', id=animal) }}";
+
+	const barChartAllUrl = "{{ url_for('get_barchart_data') }}";
+
+	const rankingChartDataUrl = "{{ url_for('get_avg_per_animal', id=animal) }}";
 </script>
 <script src="{{ url_for('static', filename='js/barChart.js') }}"></script>
 <script src="{{ url_for('static', filename='js/index.js') }}"></script>

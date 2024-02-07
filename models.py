@@ -59,3 +59,17 @@ class Production:
             (user_id,)).fetchall()
 
         return Production._prod_from_row(rows)
+
+    @staticmethod
+    def avg_per_animal(db: Connection, user_id: str):
+        rows = db.execute(
+            "SELECT animals.name, AVG(production.prod) FROM production "
+            "JOIN animals ON animals.uuid = production.a_uuid "
+            "WHERE production.user_id=(?) "
+            "GROUP BY animals.uuid;",
+            (user_id,)).fetchall()
+        prod = []
+        for row in rows:
+            p = {"name": row[0], "avg": row[1]}
+            prod.append(p)
+        return prod

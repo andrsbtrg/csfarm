@@ -2,7 +2,7 @@ from flask import Flask, render_template, session, redirect, request, jsonify
 from flask_session import Session
 from database import connection
 from werkzeug.security import check_password_hash, generate_password_hash
-from helpers import alert, hx_redirect, search_places, requires_login
+from helpers import alert, hx_redirect, search_places, requires_login, format_day_period
 from datetime import datetime
 from models import Farm, Cow, Production
 from uuid import uuid4
@@ -205,6 +205,21 @@ def milk():
         "WHERE user_id = (?) AND name = (?)",
         (user_id, name)).fetchone()
     cow = Cow(row)
+
+    # check if already been milked
+    milked = db.execute(
+        "SELECT modified_at FROM production "
+        "WHERE a_uuid = (?)"
+        "AND day_period = (?)"
+        "AND date = (?)", (cow.uuid, ampm, dt,)
+    ).fetchall()
+    if len(milked) > 0:
+        print(milked)
+        return alert(
+            f"{cow.name} was already milked on {
+                format_day_period(ampm)} {dt}: "
+            f"Updated at {milked[0][0]}"
+        )
     return render_template("milk_row.html", cow=cow, datetime=dt, ampm=ampm)
 
 
@@ -277,6 +292,17 @@ def get_barchart_data():
 
 
 @requires_login
+@app.route("/get_avg_per_animal")
+def get_avg_per_animal():
+    id = request.args.get("id", None)
+    user_id = session["user_id"]
+    db = connection()
+    prod = Production.avg_per_animal(db, user_id)
+    prod.sort(key=lambda x: x["avg"], reverse=True)
+    return jsonify(prod)
+
+
+@requires_login
 @app.route("/animals/search")
 def search_animals():
     query = request.args.get("name")
@@ -298,6 +324,19 @@ def list_animals():
     db = connection()
     user_id = session["user_id"]
     rows = db.execute(
-        "SELECT a_id, name FROM animals WHERE user_id = (?)", (user_id,)).fetchall()
+        "SELECT a_id, name FROM animals WHERE user_id = (?)",
+        (user_id,)).fetchall()
     names = [{"name": f"{row[0]} - {row[1]}", "value": row[1]} for row in rows]
     return render_template("datalist.html", id="cows", elems=names)
+
+
+@requires_login
+@app.route("/animals/ids")
+def list_animals_ids():
+    db = connection()
+    user_id = session["user_id"]
+    rows = db.execute(
+        "SELECT a_id, name FROM animals WHERE user_id = (?)",
+        (user_id,)).fetchall()
+    names = [{"name": f"{row[0]} - {row[1]}", "value": row[0]} for row in rows]
+    return render_template("datalist.html", id="cowids", elems=names)

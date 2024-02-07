@@ -33,3 +33,11 @@ def search_places(country: str, place: str) -> []:
     if len(json) == 0:
         return []
     return json
+
+
+def format_day_period(day_period):
+    if day_period == "am":
+        return "Morning"
+    elif day_period == "pm":
+        return "Afternoon"
+    return "NA"
