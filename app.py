@@ -214,11 +214,10 @@ def milk():
         "AND date = (?)", (cow.uuid, ampm, dt,)
     ).fetchall()
     if len(milked) > 0:
-        print(milked)
+        day_period = format_day_period(ampm)
         return alert(
-            f"{cow.name} was already milked on {
-                format_day_period(ampm)} {dt}: "
-            f"Updated at {milked[0][0]}"
+            f"""{cow.name} was already milked on {
+                day_period} {dt}: Updated at {milked[0][0]}"""
         )
     return render_template("milk_row.html", cow=cow, datetime=dt, ampm=ampm)
 
