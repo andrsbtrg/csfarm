@@ -2,7 +2,7 @@ from flask import Flask, render_template, session, redirect, request, jsonify
 from flask_session import Session
 from database import connection
 from werkzeug.security import check_password_hash, generate_password_hash
-from helpers import alert, hx_redirect, search_places, requires_login, format_day_period
+from helpers import alert, hx_redirect, requires_login, format_day_period
 from datetime import datetime
 from models import Farm, Cow, Production
 from uuid import uuid4
@@ -133,17 +133,16 @@ def farm():
     return hx_redirect("/farm")
 
 
-@requires_login
-@app.route("/farm/locate", methods=["POST"])
-def find_locations():
-    country = request.form.get("country")
-    location = request.form.get("location")
-    locations = []
-    if country != "" and len(location) > 3:
-        locations = search_places(country, location)
-    print(locations)
-    return render_template("location_input.html", locations=locations)
-
+# @requires_login
+# @app.route("/farm/locate", methods=["POST"])
+# def find_locations():
+#     country = request.form.get("country")
+#     location = request.form.get("location")
+#     locations = []
+#     if country != "" and len(location) > 3:
+#         locations = search_places(country, location)
+#     return render_template("location_input.html", locations=locations)
+#
 
 @requires_login
 @app.route("/animals", methods=["GET", "POST"])
