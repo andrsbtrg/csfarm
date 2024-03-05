@@ -31,8 +31,8 @@ Animals
 <table class="table">
 	<thead>
 		<tr>
-			<th scope="col">#</th>
-			<th scope="col" style="width: 100px;">Img</th>
+			<th scope="col">Tag n#</th>
+			<!-- <th scope="col" style="width: 100px;">Img</th> -->
 			<th scope="col">First</th>
 			<th scope="col">Born on</th>
 			<th scope="col">See more</th>
@@ -42,11 +42,11 @@ Animals
 		{% for cow in cows %}
 		<tr>
 			<th scope="row">{{ cow.id }}</th>
-			<td scope="row">
-				<div class="image-wrapper"><img
-						src="https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fi.pinimg.com%2Foriginals%2F89%2F26%2F73%2F8926739e794e001de75d37adc1ae2510.jpg&f=1&nofb=1&ipt=863fb3f34a688559c92d0db7ac0f4dc6bdcef7999679364cbc3fb4e5eb7fa074&ipo=images" />
-				</div>
-			</td>
+			<!-- <td scope="row"> -->
+			<!-- 	<div class="image-wrapper"><img -->
+			<!-- 			src="https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fcdn.pixabay.com%2Fphoto%2F2012%2F04%2F30%2F10%2F39%2Fcow-44720_1280.png&f=1&nofb=1&ipt=db473a11d1f202d14d16decb7c3cc99e72b789db0bc6abdec37c4dd8d231cdf7&ipo=images" /> -->
+			<!-- 	</div> -->
+			<!-- </td> -->
 			<td>{{ cow.name }}</td>
 			<td>{{ cow.birthday }}</td>
 			<td><a href="/analytics?id={{cow.id}}">See more</td>

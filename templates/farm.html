@@ -5,11 +5,19 @@ Farms
 {% endblock %}
 
 {% block main %}
-<h1>Your farms:</h1>
 
 <div>
-	<h3>{{ farm.name }}</h3>
-	<h3>{{ farm.country }}</h3>
-	<h3>{{ farm.location }}</h3>
+	<h1>Hello, {{ username }} ☀️  </h1>
+</div>
+
+<div class="container mt-5">
+	<p>Great job! Your farm: <b>{{ farm.name }} </b>
+	located on <b> {{ farm.country }}, {{ farm.location }} </b>
+	is looking great!</p>
+</div>
+
+<div class="container mt-5">
+	<p>You currently have  <b>{{ animals_count }} </b> animals,
+	and the average production per day on the last week was <b>{{ avg_prod }} </b> L </p>
 </div>
 {% endblock %}

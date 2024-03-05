@@ -1,6 +1,6 @@
 from flask import Flask, render_template, session, redirect, request, jsonify
 from flask_session import Session
-from database import connection
+from database import connection, get_username, get_animal_count, get_avg_prod
 from werkzeug.security import check_password_hash, generate_password_hash
 from helpers import alert, hx_redirect, requires_login, format_day_period
 from datetime import datetime
@@ -14,11 +14,45 @@ app.config["SESSION_TYPE"] = "filesystem"
 Session(app)
 
 
-@app.route("/")
+@app.route("/", methods=["GET", "POST"])
 def hello():
     if session.get("user_id") is None:
         return redirect("/login")
-    return render_template('index.html')
+    db = connection()
+    user_id = session["user_id"]
+    if request.method == "GET":
+        username = get_username(db, user_id)
+        row = db.execute(
+            "SELECT * from farms where user_id = (?);", (user_id,)).fetchone()
+        if row is None:
+            countries = []
+            with open("countries.txt") as file:
+                for line in file.readlines():
+                    countries.append(line.strip())
+            return render_template("farm_new.html", countries=countries)
+        farm = Farm(row)
+
+        animals_count = get_animal_count(db, user_id)
+        avg_prod = round(get_avg_prod(db, user_id), 2)
+        return render_template("farm.html",
+                               farm=farm,
+                               username=username.title(),
+                               animals_count=animals_count,
+                               avg_prod=avg_prod)
+    # handle post
+    name = request.form.get("farm-name")
+    if len(name) == 0:
+        return alert("Farm name cannot be empty")
+    country = request.form.get("country")
+    location = request.form.get("location")
+    created_at = datetime.now()
+    values = (user_id, name, country, location, created_at)
+    db.execute(
+        "INSERT INTO farms (user_id, name, country, location, created_at)"
+        "VALUES (?, ?, ?, ?, ?);",
+        values)
+    db.commit()
+    return hx_redirect("/farm")
 
 
 @app.route("/register", methods=["GET", "POST"])
