@@ -295,8 +295,24 @@ def record_milk():
 @requires_login
 @app.route("/analytics", methods=["GET"])
 def analytics():
+    dates = ["12.04.2024", "13.04.2024", "16.04.2024"]
+    production = [
+        {
+            "id": "1",
+            "records": {
+                "12.04.2024": {"prod": 15},
+                "13.04.2024": {"prod": 14},
+                "14.04.2024": {"prod": 14},
+                "15.04.2024": {"prod": 18},
+            }
+        }
+    ]
     animal = request.args.get("id", None)
-    return render_template("analytics.html", animal=animal)
+    return render_template(
+        "analytics.html",
+        animal=animal,
+        dates=dates,
+        records=production)
 
 
 @requires_login
@@ -326,7 +342,7 @@ def get_barchart_data():
 @requires_login
 @app.route("/get_avg_per_animal")
 def get_avg_per_animal():
-    id = request.args.get("id", None)
+    # id = request.args.get("id", None)
     user_id = session["user_id"]
     db = connection()
     prod = Production.avg_per_animal(db, user_id)

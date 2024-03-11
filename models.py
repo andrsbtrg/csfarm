@@ -73,3 +73,17 @@ class Production:
             p = {"name": row[0], "avg": row[1]}
             prod.append(p)
         return prod
+
+    def get_prod_per_day(db: Connection, user_id: str):
+        rows = db.execute(
+            "SELECT animals.name, animals.a_id, "
+            "production.prod, production.date FROM production "
+            "JOIN animals ON animals.uuid = production.a_uuid "
+            "WHERE production.user_id=(?);"
+            (user_id,)).fetchall()
+        animals = {}
+        for row in rows:
+            a_name = row[0]
+            prod = row[2]
+            if a_name in animals:
+                animals[a_name]

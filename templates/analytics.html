@@ -31,11 +31,38 @@ Analytics
 			<label>Production per day</label>
 			<svg id="barChart"></svg>
 		</div>
-		<div class="col" id="rankingChartWrapper">
+		<div class="col" >
+			<table class="table">
+				<thead>
+					<tr>
+						Production per day
+					</tr>
+					<tr>
+						<th> Animal ID </th>
+						{% for date in dates %}
+						<th>{{ date }} </th>
+						{% endfor %}
+					</tr>
+				</thead>
+				<tbody>
+					{% for cow in records %}
+					<th scope="row">{{ cow.id }}</th>
+					{% for date in dates %} 
+					{% if date in cow.records %}
+					<td> {{ cow.records[date].prod }} </td>
+					{% else %}
+					<td> - </td>
+					{% endif %}
+					{% endfor %}
+			{% endfor %}
+				</tbody>
+			</table>
+		</div>
+	</div>
+		<div class="row" id="rankingChartWrapper">
 			<label>Average production per animal</label>
 			<svg id="rankingChart"></svg>
 		</div>
-	</div>
 </div>
 <script src="https://cdn.jsdelivr.net/npm/d3@7"></script>
 <script>
