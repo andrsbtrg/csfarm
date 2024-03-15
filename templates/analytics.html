@@ -45,16 +45,19 @@ Analytics
 					</tr>
 				</thead>
 				<tbody>
-					{% for cow in records %}
-					<th scope="row">{{ cow.id }}</th>
-					{% for date in dates %} 
-					{% if date in cow.records %}
-					<td> {{ cow.records[date].prod }} </td>
-					{% else %}
-					<td> - </td>
-					{% endif %}
+					{% for a_id in animals %}
+					<tr>
+					{% set idx = animals[a_id] %}
+					<th scope="row">{{ a_id }}</th>
+						{% for date in dates %} 
+							{% if date in production[idx]["records"] %}
+							<td> {{ production[idx]["records"][date] }} </td>
+							{% else %}
+							<td> - </td>
+							{% endif %}
+						{% endfor %}
 					{% endfor %}
-			{% endfor %}
+					</tr>
 				</tbody>
 			</table>
 		</div>

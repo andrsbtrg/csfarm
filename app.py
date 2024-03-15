@@ -295,28 +295,43 @@ def record_milk():
 @requires_login
 @app.route("/analytics", methods=["GET"])
 def analytics():
-    dates = ["12.04.2024", "13.04.2024", "16.04.2024"]
-    production = [
-        {
-            "id": "1",
-            "records": {
-                "12.04.2024": {"prod": 15},
-                "13.04.2024": {"prod": 14},
-                "14.04.2024": {"prod": 14},
-                "15.04.2024": {"prod": 18},
-            }
-        }
-    ]
+    db = connection()
+    user_id = session["user_id"]
+    rows = db.execute(
+        "SELECT animals.a_id, production.date, "
+        "SUM(production.prod) FROM production "
+        "JOIN animals ON animals.uuid = production.a_uuid "
+        "WHERE production.user_id = (?) "
+        "GROUP BY a_uuid, date;", (user_id,))
+    animals = {}
+    production = []
+    dates = []
+    for a in rows:
+        a_id = a[0]
+        date = a[1]
+        a_prod = a[2]
+        dates.append(date)
+
+        if a_id in animals:
+            idx = animals[a_id]
+            production[idx]["records"][date] = a_prod
+        else:
+            animals[a_id] = len(production)
+            production.append({"id": a_id, "records": {}})
+    dates = set(dates)
+    dates = sorted(dates)
     animal = request.args.get("id", None)
     return render_template(
         "analytics.html",
         animal=animal,
         dates=dates,
-        records=production)
+        production=production,
+        animals=animals
+    )
 
 
-@requires_login
-@app.route("/get_barchart_data")
+@ requires_login
+@ app.route("/get_barchart_data")
 def get_barchart_data():
     """
     JSON
@@ -339,8 +354,8 @@ def get_barchart_data():
     return jsonify(prod)
 
 
-@requires_login
-@app.route("/get_avg_per_animal")
+@ requires_login
+@ app.route("/get_avg_per_animal")
 def get_avg_per_animal():
     # id = request.args.get("id", None)
     user_id = session["user_id"]
@@ -350,8 +365,8 @@ def get_avg_per_animal():
     return jsonify(prod)
 
 
-@requires_login
-@app.route("/animals/search")
+@ requires_login
+@ app.route("/animals/search")
 def search_animals():
     query = request.args.get("name")
     if query == "":
@@ -366,8 +381,8 @@ def search_animals():
     return render_template("datalist.html", id="cows", elems=names)
 
 
-@requires_login
-@app.route("/animals/names")
+@ requires_login
+@ app.route("/animals/names")
 def list_animals():
     db = connection()
     user_id = session["user_id"]
@@ -378,8 +393,8 @@ def list_animals():
     return render_template("datalist.html", id="cows", elems=names)
 
 
-@requires_login
-@app.route("/animals/ids")
+@ requires_login
+@ app.route("/animals/ids")
 def list_animals_ids():
     db = connection()
     user_id = session["user_id"]
