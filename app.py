@@ -179,7 +179,7 @@ def farm():
 #
 
 @requires_login
-@app.route("/animals", methods=["GET", "POST"])
+@app.route("/animals", methods=["GET", "POST", "PUT"])
 def animals():
     if request.method == "GET":
         db = connection()
@@ -194,6 +194,17 @@ def animals():
             cows.append(cow)
         return render_template("animals.html", cows=cows)
     # handle post
+    if request.method == "PUT":
+        db = connection()
+        user_id = session["user_id"]
+        new_name = request.form.get("name")
+        a_id = request.form.get("id")
+        db.execute(
+            "UPDATE animals "
+            "SET name = (?) "
+            "WHERE user_id = (?) AND a_id = (?);", (new_name, user_id, a_id))
+        db.commit()
+        return hx_redirect("/animals")
     a_id = request.form.get("tag")
     name = request.form.get("name")
     birthday = request.form.get("birthday")
@@ -219,8 +230,8 @@ def animals():
     return hx_redirect("/animals")
 
 
-@requires_login
-@app.route("/milk", methods=["GET", "POST"])
+@ requires_login
+@ app.route("/milk", methods=["GET", "POST"])
 def milk():
     if request.method == "GET":
         return render_template("milk.html")
@@ -256,7 +267,7 @@ def milk():
     return render_template("milk_row.html", cow=cow, datetime=dt, ampm=ampm)
 
 
-@app.route("/milk/record", methods=["POST"])
+@ app.route("/milk/record", methods=["POST"])
 def record_milk():
     known_keys = ["datetime", "day-period"]
     datetime = request.form.get(known_keys[0])
@@ -292,8 +303,8 @@ def record_milk():
     return render_template("milk_table.html")
 
 
-@requires_login
-@app.route("/analytics", methods=["GET"])
+@ requires_login
+@ app.route("/analytics", methods=["GET"])
 def analytics():
     db = connection()
     user_id = session["user_id"]
@@ -399,6 +410,19 @@ def list_animals():
         (user_id,)).fetchall()
     names = [{"name": f"{row[0]} - {row[1]}", "value": row[0]} for row in rows]
     return render_template("datalist.html", id="cows", elems=names)
+
+
+@ app.route("/animals/edit")
+def animals_edit():
+    a_id = request.args.get("id")
+    db = connection()
+    user_id = session["user_id"]
+    row = db.execute(
+        "SELECT uuid, a_id, name, birthday, img FROM animals "
+        "WHERE user_id = (?) AND a_id = (?)",
+        (user_id, a_id)).fetchone()
+    cow = Cow(row)
+    return render_template("animal_edit_form.html", cow=cow)
 
 
 @ requires_login

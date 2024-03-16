@@ -1,0 +1,20 @@
+<tr hx-target="this" hx-swap="outerHTML">
+	<form hx-put="/animals">
+		<th scope="row">
+			<input type="hidden" name="id" value="{{ cow.id }}" />
+			{{ cow.id }}
+		</th>
+		<td>
+			<div class="form-group">
+				<input type="text" name="name" value="{{ cow.name }}" />
+			</div>
+		</td>
+		<td>{{ cow.birthday }}</td>
+		<td>
+			<button class="btn btn-primary">Submit</button>
+		</td>
+		<td>
+			<a class="btn btn-seconday" href="/animals">Cancel</a>
+		</td>
+	</form>
+</tr>

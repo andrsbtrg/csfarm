@@ -32,24 +32,22 @@ Animals
 	<thead>
 		<tr>
 			<th scope="col">Tag n#</th>
-			<!-- <th scope="col" style="width: 100px;">Img</th> -->
 			<th scope="col">Name</th>
 			<th scope="col">Born on</th>
-			<th scope="col">See more</th>
+			<th scope="col"></th>
+			<th scope="col">Edit</th>
 		</tr>
 	</thead>
 	<tbody class="align-middle">
 		{% for cow in cows %}
-		<tr>
+		<tr hx-target="this" hx-swap="outerHTML">
 			<th scope="row">{{ cow.id }}</th>
-			<!-- <td scope="row"> -->
-			<!-- 	<div class="image-wrapper"><img -->
-			<!-- 			src="https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fcdn.pixabay.com%2Fphoto%2F2012%2F04%2F30%2F10%2F39%2Fcow-44720_1280.png&f=1&nofb=1&ipt=db473a11d1f202d14d16decb7c3cc99e72b789db0bc6abdec37c4dd8d231cdf7&ipo=images" /> -->
-			<!-- 	</div> -->
-			<!-- </td> -->
 			<td>{{ cow.name }}</td>
 			<td>{{ cow.birthday }}</td>
 			<td><a href="/analytics?id={{cow.id}}">See more</td>
+			<td>
+				<button class="btn btn-secondary" hx-get="/animals/edit?id={{cow.id}}">edit</button>
+			</td>
 		</tr>
 		{% endfor %}
 	</tbody>
