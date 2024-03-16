@@ -230,13 +230,14 @@ def milk():
 
     dt = request.form.get("date")
     ampm = request.form.get("ampm")
-    name = request.form.get("name")
-    if name == "":
+    a_id = request.form.get("a_id")
+    if a_id == "" or a_id is None:
         return alert("Cow name shoudn't be empty")
+    print(user_id, a_id)
     row = db.execute(
         "SELECT uuid, a_id, name, birthday, img FROM animals "
-        "WHERE user_id = (?) AND name = (?)",
-        (user_id, name)).fetchone()
+        "WHERE user_id = (?) AND a_id = (?)",
+        (user_id, a_id)).fetchone()
     cow = Cow(row)
 
     # check if already been milked
@@ -282,7 +283,6 @@ def record_milk():
 
     db = connection()
     for x in data:
-
         db.execute(
             "INSERT INTO production ("
             "user_id, a_uuid, prod, day_period, date, created_at, modified_at)"
@@ -306,27 +306,35 @@ def analytics():
     animals = {}
     production = []
     dates = []
+    totals = {}
     for a in rows:
         a_id = a[0]
         date = a[1]
         a_prod = a[2]
+        print(a_id, date, a_prod)
         dates.append(date)
+        if date in totals:
+            totals[date] += a_prod
+        else:
+            totals[date] = a_prod
 
         if a_id in animals:
             idx = animals[a_id]
             production[idx]["records"][date] = a_prod
         else:
             animals[a_id] = len(production)
-            production.append({"id": a_id, "records": {}})
+            production.append({"id": a_id, "records": {date: a_prod}})
     dates = set(dates)
     dates = sorted(dates)
     animal = request.args.get("id", None)
+
     return render_template(
         "analytics.html",
         animal=animal,
         dates=dates,
         production=production,
-        animals=animals
+        animals=animals,
+        totals=totals
     )
 
 
@@ -389,7 +397,7 @@ def list_animals():
     rows = db.execute(
         "SELECT a_id, name FROM animals WHERE user_id = (?)",
         (user_id,)).fetchall()
-    names = [{"name": f"{row[0]} - {row[1]}", "value": row[1]} for row in rows]
+    names = [{"name": f"{row[0]} - {row[1]}", "value": row[0]} for row in rows]
     return render_template("datalist.html", id="cows", elems=names)
 
 

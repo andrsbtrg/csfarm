@@ -6,39 +6,37 @@ Analytics
 
 {% block main %}
 
-<form class="row g-3" action="/analytics" method="get">
-	<div class="col-auto">
-		<label class="align-vertical">Cow id or name:</label>
-	</div>
-	<div class="col-auto">
-		<input class="form-control" name="id" type="text" list="cowids" 
-		hx-get="/animals/ids"
-		hx-swap="outerHTML"
-		hx-trigger="keyup once"
-		hx-target="#cowids"
-		/>
-		<datalist id="cowids">
-		</datalist>
-	</div>
-	<div class="col-auto">
-		<button type="submit" class="btn btn-primary mb-3">Filter</button>
-	</div>
+<form class="form-group row g-3 mb-3 mt-1" action="/analytics" method="get">
+<div class="col mb-3"> 
+	<label for="id">Filter by animal Id</label>
+</div>
+<div class="col mb-3">
+	<select class="form-select" name="id" type="text">
+		<option disabled selected="true" >Id</option> 
+		{% for id in animals %}
+		<option value={{ id }}>{{id}}</option>
+		{% endfor %}
+	</select>
+</div>
+<button type="submit" class="btn btn-primary col mb-3">Filter</button>
 </form>
 
 <div class="container">
 	<div class="row">
-		<div class="col" id="barChartWrapper">
+		<div class="col overflow-auto" id="barChartWrapper">
 			<label>Production per day</label>
 			<svg id="barChart"></svg>
 		</div>
-		<div class="col" >
-			<table class="table">
+	</div>
+	<div class="row">
+		<div class="col overflow-auto">
+			<table class="table table-striped table-hover table-bordered overflow-scroll">
 				<thead>
 					<tr>
 						Production per day
 					</tr>
 					<tr>
-						<th> Animal ID </th>
+						<th> ID </th>
 						{% for date in dates %}
 						<th>{{ date }} </th>
 						{% endfor %}
@@ -58,14 +56,22 @@ Analytics
 						{% endfor %}
 					{% endfor %}
 					</tr>
+					<tr> 
+						<th scope="row">Total</th>
+						{% for date in dates %} 
+						<td>{{ totals[date] }}</td>
+						{% endfor %}
+					</tr>
 				</tbody>
 			</table>
 		</div>
 	</div>
-		<div class="row" id="rankingChartWrapper">
+	<div class="row">
+		<div class="col overflow-auto" id="rankingChartWrapper">
 			<label>Average production per animal</label>
 			<svg id="rankingChart"></svg>
 		</div>
+	</div>
 </div>
 <script src="https://cdn.jsdelivr.net/npm/d3@7"></script>
 <script>

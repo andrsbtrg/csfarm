@@ -10,7 +10,6 @@ Milk
 	<div class="form-group row g-3 mb-3 mt-1">
 		<div class="col">
 			<div class="row mb-3">
-				<label for="date" class="col-sm-2 col-form-label">Date</label>
 				<input required class="form-control mx-auto w-auto" name="date" type="date" />
 			</div>
 		</div>
@@ -21,7 +20,7 @@ Milk
 			</select>
 		</div>
 		<div class="col">
-			<input class="form-control mx-auto w-auto" name="name" type="text" autocomplete="off" list="cows"
+			<input class="form-control mx-auto w-auto" name="a_id" type="text" autocomplete="off" list="cows"
 				placeholder="Cow name or 'id'"
 				hx-get="/animals/names"
 				hx-swap="outerHTML"

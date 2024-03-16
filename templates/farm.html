@@ -12,12 +12,11 @@ Farms
 
 <div class="container mt-5">
 	<p>Great job! Your farm: <b>{{ farm.name }} </b>
-	located on <b> {{ farm.country }}, {{ farm.location }} </b>
+	located on <b>{{ farm.location }}, {{ farm.country }}</b>
 	is looking great!</p>
 </div>
 
 <div class="container mt-5">
-	<p>You currently have  <b>{{ animals_count }} </b> animals,
-	and the average production per day on the last week was <b>{{ avg_prod }} </b> L </p>
+	<p>You currently have <b>{{ animals_count }} </b> <a href="/animals">animals</a>. <br/>The average production per day on the last week was <b>{{ avg_prod }}</b>L </p>
 </div>
 {% endblock %}
