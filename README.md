@@ -1,6 +1,7 @@
-# CSFarm - CS50 final project
+# CSFarm
+#### Video Demo: https://youtu.be/lpvZmMoYlJY
 
-## Idea 
+#### Description:
 
 A web application for farmers in dairy farms to track the milk production of each cow
 
@@ -12,7 +13,7 @@ pip install -r requirements.txt
 flask run --debug
 ```
 
-## Features
+#### Features:
 
 - Tabs: Farm, Animals, Milk, History
 - Someone can create a new account and add a new farm with some basic information
