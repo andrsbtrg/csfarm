@@ -10,7 +10,7 @@ Milk
 	<div class="form-group row g-3 mb-3 mt-1">
 		<div class="col">
 			<div class="row mb-3">
-				<input required class="form-control mx-auto w-auto" name="date" type="date" />
+				<input required class="form-control mx-auto w-auto" name="date" type="date" id="datePicker" />
 			</div>
 		</div>
 		<div class="col">
@@ -51,4 +51,7 @@ Milk
 	</table>
 	<button class="btn btn-primary" type="submit">Submit measurements</button>
 </form>
+<script>
+	document.getElementById('datePicker').valueAsDate = new Date();
+</script>
 {% endblock %}
